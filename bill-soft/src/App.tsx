@@ -1,4 +1,5 @@
 import './App.css'
+import Dashboard from './components/Dashboard'
 
 function App() {
 
@@ -6,6 +7,7 @@ function App() {
     <>
       <div>
         <h1>Bill soft</h1>
+        <Dashboard />
       </div>
     </>
   )
