@@ -1,16 +1,14 @@
-import './App.css'
-import Dashboard from './components/Dashboard'
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from './themes/theme';
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
-
   return (
-    <>
-      <div>
-        <h1>Bill soft</h1>
-        <Dashboard />
-      </div>
-    </>
-  )
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppRoutes />
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
