@@ -7,7 +7,7 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login onLogin={()=>(console.log("hi"))} />} />
       </Routes>
     </BrowserRouter>
   );

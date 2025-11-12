@@ -1,83 +1,69 @@
-import { Box, Button, TextField, Typography, Paper } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import type { SubmitHandler } from 'react-hook-form';
+import React, { useState }  from "react";
+import type { FormEvent }  from "react";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
-interface LoginFormInputs {
-  mobile: string;
-  organization: string;
+interface LoginProps {
+  onLogin: () => void;
 }
 
-export default function Login() {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log('Login Data:', data);
-    navigate('/');
-    // TODO: handle login (e.g., call backend API)
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    // Dummy check — replace with backend validation later
+    if (email === "admin@gmail.com" && password === "admin123") {
+      alert("✅ Login successful!");
+      onLogin();
+      navigate("/"); // Redirect here
+    } else {
+      alert("❌ Invalid credentials");
+    }
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f5f5f5',
-      }}
-    >
-      <Paper
-        elevation={4}
-        sx={{
-          p: 4,
-          borderRadius: 3,
-          width: '100%',
-          maxWidth: 400, // fixed width for the card
-        }}
-      >
-        <Typography variant="h5" align="center" gutterBottom>
-          Billing Software Login
-        </Typography>
+    <div className="login-page">
+      <div className="login-card">
+        <h2>Welcome Back 👋</h2>
+        <p className="subtitle">Sign in to access your billing dashboard</p>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}
-        >
-          <TextField
-            label="Mobile Number"
-            variant="outlined"
-            fullWidth
-            {...register('mobile', {
-              required: 'Mobile number is required',
-              pattern: {
-                value: /^[6-9]\d{9}$/,
-                message: 'Enter a valid 10-digit mobile number',
-              },
-            })}
-            error={!!errors.mobile}
-            helperText={errors.mobile?.message}
-          />
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-          <TextField
-            label="Organization Name"
-            variant="outlined"
-            fullWidth
-            {...register('organization', {
-              required: 'Organization name is required',
-              minLength: { value: 3, message: 'Minimum 3 characters required' },
-            })}
-            error={!!errors.organization}
-            helperText={errors.organization?.message}
-          />
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-          <Button type="submit" variant="contained" size="large">
+          <button type="submit" className="login-btn">
             Login
-          </Button>
-        </Box>
-      </Paper>
-    </Box>
+          </button>
+        </form>
+
+        <p className="footer-text">
+          © {new Date().getFullYear()} BillSoft Inc. All rights reserved.
+        </p>
+      </div>
+    </div>
   );
-}
+};
+
+
+export default Login;
