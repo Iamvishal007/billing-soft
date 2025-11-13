@@ -1,80 +1,97 @@
-import { Box, Typography, Avatar, List, ListItemButton, ListItemText, Divider, Paper } from '@mui/material';
-import { useState } from 'react';
+import React from "react";
+import { Box, Grid, Typography, Toolbar } from "@mui/material";
+import Header from "../components/header";     // 
+import Sidebar from "../components/sidebar";   // 
+import Footer from "../components/Footer";
+import FeatureCard from "../components/FeatureCard";
+import { useNavigate } from "react-router-dom";
+//import AddParty from "../pages/AddParty";
 
-const menuItems = [
-  { label: 'Parties' },
-  { label: 'Items' },
-  { label: 'Billing' },
-  { label: 'Reports' },
-  { label: 'Settings' },
-  { label: 'Logout' },
-];
 
-export default function Dashboard() {
-  const [selected, setSelected] = useState('Parties');
+interface DashboardProps {
+  onLogout: () => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
+  const navigate = useNavigate();
+
+  const handleFeatureClick = (feature: string) => {
+    alert(`You clicked: ${feature}`);
+  };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #667eea, #764ba2)",
+      }}
+    >
+      {/* Header */}
+      <Header />
+
       {/* Sidebar */}
-      <Paper
-        elevation={3}
-        sx={{
-          width: 250,
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#fff',
-          borderRadius: 0,
-        }}
-      >
-        {/* Profile section */}
-        <Box sx={{ p: 3, textAlign: 'center', borderBottom: '1px solid #eee' }}>
-          <Avatar
-            sx={{
-              width: 64,
-              height: 64,
-              margin: '0 auto',
-              bgcolor: '#1976d2',
-              mb: 1,
-            }}
-          >
-            UR
-          </Avatar>
-          <Typography variant="subtitle1" fontWeight={600}>
-            User
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            +91 9876543210
-          </Typography>
-        </Box>
+      <Sidebar onLogout={onLogout} />
 
-        {/* Menu */}
-        <List sx={{ flexGrow: 1 }}>
-          {menuItems.map((item) => (
-            <ListItemButton
-              key={item.label}
-              selected={selected === item.label}
-              onClick={() => setSelected(item.label)}
-            >
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          ))}
-        </List>
+      {/* Main Content */}
+      <Box component="main" sx={{ flexGrow: 1, p: 3, color: "white" }}>
+        <Toolbar />
 
-        <Divider />
-        <Typography variant="caption" textAlign="center" sx={{ py: 1, color: 'text.secondary' }}>
-          © 2025 BillSoft
+        <Typography variant="h4" fontWeight={600} mb={2}>
+          Welcome Back 👋
         </Typography>
-      </Paper>
 
-      {/* Main content area */}
-      <Box sx={{ flexGrow: 1, p: 3 }}>
-        <Typography variant="h4" fontWeight={600} gutterBottom>
-          {selected}
+        <Typography variant="subtitle1" mb={4}>
+          Manage your billing workflow efficiently.
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          This is the {selected} section content.
-        </Typography>
+
+        <Grid container spacing={3}>
+          {/* Create Quotation */}
+          <Grid /* item xs={12} sm={6} md={4}*/>
+            <FeatureCard
+              title="Create Quotation"
+              description="Prepare detailed quotations for your customers."
+              actionLabel="Create"
+              onClick={() => handleFeatureClick("Quotation")}
+            />
+          </Grid>
+
+          {/* Add Item */}
+          <Grid /* item /*xs={12} sm={6} md={4}*/>
+            <FeatureCard
+              title="Add Item"
+              description="Add new products or services to your catalog."
+              actionLabel="Add Item"
+              onClick={() => handleFeatureClick("Item")}
+            />
+          </Grid>
+
+          {/* Add Party */}
+          <Grid /*item /*xs={12} sm={6} md={4}*/>
+            <FeatureCard
+              title="Add Party"
+              description="Add or manage your customer and vendor details."
+              actionLabel="Add Party"
+              onClick={() => navigate("/add-party")} // ✅ Goes to Add Party page
+            />
+          </Grid>
+
+          {/* Create Invoice */}
+          <Grid /*item /*xs={12} sm={6} md={4}*/>
+            <FeatureCard
+              title="Create Invoice"
+              description="Generate and send professional invoices easily."
+              actionLabel="Create Invoice"
+              onClick={() => handleFeatureClick("Invoice")}
+            />
+          </Grid>
+        </Grid>
+
+        {/* Footer */}
+        <Footer />
       </Box>
     </Box>
   );
-}
+};
+
+export default Dashboard;

@@ -17,7 +17,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
     // Dummy check — replace with backend validation later
     if (email === "admin@gmail.com" && password === "admin123") {
-      alert("✅ Login successful!");
+      //alert("✅ Login successful!");
       onLogin();
       navigate("/"); // Redirect here
     } else {
