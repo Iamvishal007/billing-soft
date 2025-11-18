@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -8,9 +9,12 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
-import ItemsPage from "./ItemsPage";
-import React, { useState } from "react";
 
+import ItemsPage from "./ItemsPage";
+import PartyPage from "./PartyPage"; // make sure this path/casing is correct
+import { useNavigate } from "react-router-dom";
+
+/* ------------------ MENU ITEMS ------------------ */
 const menuItems = [
   { label: "Parties" },
   { label: "Items" },
@@ -20,11 +24,13 @@ const menuItems = [
   { label: "Logout" },
 ];
 
-// Example components
-function Parties() {
-  return <Typography>Parties content here...</Typography>;
+/* ------------------ PARTIES SECTION ------------------ */
+function PartiesSection() {
+  // If you want Parties to manage its own navigation or modal, PartyPage handles that.
+  return <PartyPage />;
 }
 
+/* ------------------ OTHER SECTIONS ------------------ */
 function Items() {
   return <ItemsPage />;
 }
@@ -41,11 +47,18 @@ function Settings() {
   return <Typography>Settings page...</Typography>;
 }
 
-export default function Dashboard() {
-  const [selected, setSelected] = useState("Parties");
+/* ------------------ MAIN DASHBOARD ------------------ */
+interface DashboardProps {
+  onLogout: () => void;
+}
 
+export default function Dashboard({ onLogout }: DashboardProps) {
+  const [selected, setSelected] = useState<string>("Parties");
+  const navigate = useNavigate();
+
+  // map menu label -> component
   const components: Record<string, React.ReactNode> = {
-    Parties: <Parties />,
+    Parties: <PartiesSection />,
     Items: <Items />,
     Billing: <Billing />,
     Reports: <Reports />,
@@ -53,11 +66,27 @@ export default function Dashboard() {
     Logout: <Typography>Logging out...</Typography>,
   };
 
+  const handleMenuClick = (label: string) => {
+    if (label === "Logout") {
+      // call parent's logout handler and navigate to login
+      onLogout();
+      navigate("/login");
+      return;
+    }
+
+    // other items: simply update selected view
+    setSelected(label);
+  };
+
   return (
     <Box
-      sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f5f5f5" }}
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+      }}
     >
-      {/* Sidebar */}
+      {/* ------------------ SIDEBAR ------------------ */}
       <Paper
         elevation={3}
         sx={{
@@ -68,7 +97,9 @@ export default function Dashboard() {
           borderRadius: 0,
         }}
       >
-        <Box sx={{ p: 3, textAlign: "center", borderBottom: "1px solid #eee" }}>
+        <Box
+          sx={{ p: 3, textAlign: "center", borderBottom: "1px solid #eee" }}
+        >
           <Avatar
             sx={{
               width: 64,
@@ -88,12 +119,13 @@ export default function Dashboard() {
           </Typography>
         </Box>
 
+        {/* Menu List */}
         <List sx={{ flexGrow: 1 }}>
           {menuItems.map((item) => (
             <ListItemButton
               key={item.label}
               selected={selected === item.label}
-              onClick={() => setSelected(item.label)}
+              onClick={() => handleMenuClick(item.label)}
             >
               <ListItemText primary={item.label} />
             </ListItemButton>
@@ -110,7 +142,7 @@ export default function Dashboard() {
         </Typography>
       </Paper>
 
-      {/* Right content */}
+      {/* ------------------ RIGHT CONTENT ------------------ */}
       <Box sx={{ flexGrow: 1, p: 3 }}>{components[selected]}</Box>
     </Box>
   );
